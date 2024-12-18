@@ -19,7 +19,6 @@ COPY frontend /app/frontend
 # Build the React project
 WORKDIR /app/frontend
 
-RUN pnpm run generate-pwa-assets
 RUN pnpm run build
 
 # Stage 2: Build the backend (NestJS project)
