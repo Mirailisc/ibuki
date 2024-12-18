@@ -15,10 +15,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
+
       - uses: pnpm/action-setup@v3
         with:
           version: 8
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22.x"
@@ -49,6 +50,9 @@ jobs:
           file: Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.docker_username }}/${{ secrets.image_name }}:${{ env.sha_short }}, ${{ secrets.docker_username }}/${{ secrets.image_name }}:latest
+          build-args: |
+            SENTRY_AUTH_FRONTEND=${{ secrets.SENTRY_AUTH_FRONTEND }}
+            SENTRY_AUTH_BACKEND=${{ secrets.SENTRY_AUTH_BACKEND }}
 
   update-manifest:
     name: Update Kubernetes manifest
@@ -80,5 +84,6 @@ jobs:
           sed -i "s#appVersion.*#appVersion: ${{ env.sha_short }}#g" ${{ secrets.image_name }}/Chart.yaml
           git add -A
           git commit -am "update ${{ inputs.image_name }} image to version ${{ env.sha_short }}"
+
       - run: echo ${{ github }}
       - run: git push origin main

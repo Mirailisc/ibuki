@@ -77,10 +77,13 @@ jobs:
           node-version: "22.x"
           cache: "pnpm"
 
+      - name: Set SENTRY_AUTH_TOKEN for frontend
+        run: echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_FRONTEND }}" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run ESLint
+      - name: Run Frontend Build
         run: pnpm frontend:build
 
   backend-build:
@@ -103,8 +106,11 @@ jobs:
           node-version: "22.x"
           cache: "pnpm"
 
+      - name: Set SENTRY_AUTH_TOKEN for backend
+        run: echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_BACKEND }}" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run ESLint
+      - name: Run Backend Build
         run: pnpm backend:build

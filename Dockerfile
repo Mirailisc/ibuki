@@ -6,6 +6,10 @@ WORKDIR /app
 # Enable corepack and use pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
+# Accept frontend-specific SENTRY_AUTH_TOKEN as a build argument
+ARG SENTRY_AUTH_FRONTEND
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_FRONTEND}
+
 # Copy the root package.json and pnpm workspace files
 COPY package.json pnpm-workspace.yaml ./
 COPY pnpm-lock.yaml ./
@@ -27,6 +31,10 @@ WORKDIR /app
 
 # Enable corepack and use pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Accept backend-specific SENTRY_AUTH_TOKEN as a build argument
+ARG SENTRY_AUTH_BACKEND
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_BACKEND}
 
 # Copy the root package.json and pnpm workspace files
 COPY package.json pnpm-workspace.yaml ./
@@ -52,6 +60,10 @@ WORKDIR /app
 
 # Enable corepack and use pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Accept SENTRY_AUTH_TOKEN as a build argument and set it as an environment variable
+ARG SENTRY_AUTH_TOKEN
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 
 # Copy the root package.json and pnpm workspace files
 COPY package.json pnpm-workspace.yaml ./

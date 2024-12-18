@@ -5,6 +5,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        SENTRY_AUTH_FRONTEND: ${SENTRY_AUTH_FRONTEND}
+        SENTRY_AUTH_BACKEND: ${SENTRY_AUTH_BACKEND}
     ports:
       - "8080:4000"
     environment:
