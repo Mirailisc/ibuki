@@ -6,14 +6,13 @@ WORKDIR /app
 # Enable corepack and use pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy the root package.json and pnpm workspace files
-COPY package.json pnpm-workspace.yaml ./
-COPY pnpm-lock.yaml ./
+# Copy the root package.json, pnpm-lock.yaml, and workspace file
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 
-# Install all dependencies in the workspace
-RUN pnpm install --frozen-lockfile
+# Install only frontend dependencies
+RUN pnpm install --frozen-lockfile --filter frontend...
 
-# Copy the frontend source code (including tsconfig.json)
+# Copy the frontend source code
 COPY frontend /app/frontend
 
 # Build the React project
@@ -29,12 +28,11 @@ WORKDIR /app
 # Enable corepack and use pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy the root package.json and pnpm workspace files
-COPY package.json pnpm-workspace.yaml ./
-COPY pnpm-lock.yaml ./
+# Copy the root package.json, pnpm-lock.yaml, and workspace file
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 
-# Install all dependencies in the workspace
-RUN pnpm install --frozen-lockfile
+# Install only backend dependencies
+RUN pnpm install --frozen-lockfile --filter backend...
 
 # Copy the backend source code
 COPY backend /app/backend
@@ -55,12 +53,11 @@ WORKDIR /app
 # Enable corepack and use pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy the root package.json and pnpm workspace files
-COPY package.json pnpm-workspace.yaml ./
-COPY pnpm-lock.yaml ./
+# Copy the root package.json, pnpm-lock.yaml, and workspace file
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 
 # Install only production dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod
 
 # Copy the built backend code
 COPY --from=backend-build /app/backend /app/backend
