@@ -6,18 +6,18 @@ WORKDIR /app
 # Enable corepack and use pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy the root package.json, pnpm-lock.yaml, and workspace file
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+# Copy the root package.json and pnpm workspace files
+COPY package.json pnpm-workspace.yaml ./
+COPY pnpm-lock.yaml ./
 
-# Install only frontend dependencies
-RUN pnpm install --frozen-lockfile --filter frontend...
+# Install all dependencies in the workspace
+RUN pnpm install --frozen-lockfile
 
-# Copy the frontend source code
+# Copy the frontend source code (including tsconfig.json)
 COPY frontend /app/frontend
 
 # Build the React project
 WORKDIR /app/frontend
-
 RUN pnpm run build
 
 # Stage 2: Build the backend (NestJS project)
@@ -28,11 +28,12 @@ WORKDIR /app
 # Enable corepack and use pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy the root package.json, pnpm-lock.yaml, and workspace file
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+# Copy the root package.json and pnpm workspace files
+COPY package.json pnpm-workspace.yaml ./
+COPY pnpm-lock.yaml ./
 
-# Install only backend dependencies
-RUN pnpm install --frozen-lockfile --filter backend...
+# Install all dependencies in the workspace
+RUN pnpm install --frozen-lockfile
 
 # Copy the backend source code
 COPY backend /app/backend
@@ -42,7 +43,6 @@ COPY --from=frontend-build /app/frontend/dist /app/backend/public
 
 # Build the NestJS project
 WORKDIR /app/backend
-
 RUN pnpm run build
 
 # Stage 3: Final production image
@@ -53,10 +53,12 @@ WORKDIR /app
 # Enable corepack and use pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy the root package.json, pnpm-lock.yaml, and workspace file
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+# Copy the root package.json and pnpm workspace files
+COPY package.json pnpm-workspace.yaml ./
+COPY pnpm-lock.yaml ./
 
-RUN pnpm install --frozen-lockfile
+# Install only production dependencies
+RUN pnpm install --prod --frozen-lockfile
 
 # Copy the built backend code
 COPY --from=backend-build /app/backend /app/backend
