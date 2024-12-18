@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
 import { SentryModule } from '@sentry/nestjs/setup'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { SentryModule } from '@sentry/nestjs/setup'
         serveRoot: '/',
       }),
   ].filter(Boolean),
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
