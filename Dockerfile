@@ -56,8 +56,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 # Copy the root package.json, pnpm-lock.yaml, and workspace file
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 
-# Install only production dependencies
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --frozen-lockfile
 
 # Copy the built backend code
 COPY --from=backend-build /app/backend /app/backend
