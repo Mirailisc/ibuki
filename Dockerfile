@@ -61,5 +61,4 @@ ENV URL URL
 
 EXPOSE 4000
 
-# Command to run the NestJS app
 CMD ["pnpm", "run", "backend:prod"]
