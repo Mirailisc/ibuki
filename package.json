@@ -18,6 +18,6 @@
   },
   "keywords": [],
   "author": "Mirailisc",
-  "private": true,
+  "private": false,
   "license": "ISC"
 }
